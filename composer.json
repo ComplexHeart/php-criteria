@@ -1,0 +1,36 @@
+{
+  "name": "complex-heart/criteria",
+  "description": "Implementation of Criteria patterns for Complex Heart SDK.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Unay Santisteban",
+      "email": "usantisteban@othercode.es"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": "^7.4|^8.0",
+    "ext-json": "*",
+    "complex-heart/domain-model": "dev-develop"
+  },
+  "require-dev": {
+    "phpstan/phpstan": "^0.12.64",
+    "pestphp/pest": "^1.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "ComplexHeart\\Domain\\Criteria\\": "src/Domain/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "ComplexHeart\\Test\\Domain\\Criteria\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/pest --configuration=phpunit.xml --coverage-clover=coverage.xml",
+    "analyse": "vendor/bin/phpstan analyse src --no-progress --level=5"
+  }
+}
