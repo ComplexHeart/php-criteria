@@ -1,8 +1,8 @@
 {
   "name": "complex-heart/criteria",
-  "description": "Implementation of Criteria patterns for Complex Heart SDK.",
+  "description": "Small implementation of a filter criteria pattern in PHP for Complex Heart SDK. Compose several filters using fluent interface.",
   "type": "library",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "authors": [
     {
       "name": "Unay Santisteban",
@@ -11,7 +11,7 @@
   ],
   "minimum-stability": "stable",
   "require": {
-    "php": "^7.4|^8.0",
+    "php": "^7.4|^8.0|^8.1",
     "ext-json": "*",
     "complex-heart/domain-model": "dev-develop"
   },
@@ -32,5 +32,10 @@
   "scripts": {
     "test": "vendor/bin/pest --configuration=phpunit.xml --coverage-clover=coverage.xml",
     "analyse": "vendor/bin/phpstan analyse src --no-progress --level=5"
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
   }
 }
