@@ -7,18 +7,17 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        php-version:
-          - "7.4"
-          - "8.0"
+        php-version: [ 7.4, 8.0, 8.1 ]
 
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-      - name: Install PHP
+      - name: Set up PHP ${{ matrix.php-version }}
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
@@ -38,16 +37,17 @@ jobs:
       - name: Install Dependencies
         run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
+      - name: Execute Static Code analysis
+        run: composer analyse
+
       - name: Execute Unit, Integration and Acceptance Tests
         run: composer test
 
-      - name: Upload coverage report
-        uses: codecov/codecov-action@v1.0.14
+      - name: Upload Coverage Report
+        uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage.xml
+          files: ./coverage.xml
           flags: unittests
           fail_ci_if_error: true
 
-      - name: Execute Static Code analysis
-        run: composer analyse
