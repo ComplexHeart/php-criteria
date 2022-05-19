@@ -6,7 +6,7 @@
 Small implementation of a filter criteria pattern in PHP for Complex Heart SDK. Compose several filters using fluent
 interface.
 
-##Installation
+## Installation
 
 Just install the package from Packagist using composer:
 
