@@ -30,7 +30,7 @@
     }
   },
   "scripts": {
-    "test": "vendor/bin/pest --configuration=phpunit.xml --coverage-clover=coverage.xml --log-junit=tests.xml",
+    "test": "vendor/bin/pest --configuration=phpunit.xml --coverage-clover=coverage.xml --log-junit=phpunit.xml",
     "analyse": "vendor/bin/phpstan analyse src --no-progress --level=5"
   },
   "config": {

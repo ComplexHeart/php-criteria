@@ -5,6 +5,6 @@ composer.phar
 /coverage/
 *[N|n]o[G|g]it*
 coverage.xml
-tests.xml
+phpunit.xml
 .phpunit.result.cache
 composer.lock
