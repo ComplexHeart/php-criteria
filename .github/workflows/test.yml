@@ -43,6 +43,10 @@ jobs:
       - name: Execute Unit, Integration and Acceptance Tests
         run: composer test
 
+      - name: Fix coverage.xml for Sonar
+        run: |
+          sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace/@g' coverage.xml
+
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
