@@ -3,7 +3,7 @@ name: Test
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     types: [ opened, synchronize, reopened ]
 
@@ -49,6 +49,7 @@ jobs:
       - name: Fix coverage.xml for Sonar
         run: |
           sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace/@g' coverage.xml
+          sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace/@g' test.xml
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
