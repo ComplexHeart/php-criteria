@@ -11,12 +11,12 @@
   ],
   "minimum-stability": "stable",
   "require": {
-    "php": "^7.4|^8.0|^8.1",
-    "ext-json": "*",
-    "complex-heart/domain-model": "^1.0.0"
+    "php": "^8.0.2",
+    "complex-heart/domain-model": "^2.0.0",
+    "ext-json": "*"
   },
   "require-dev": {
-    "phpstan/phpstan": "^0.12.64",
+    "phpstan/phpstan": "^1.9.0",
     "pestphp/pest": "^1.4"
   },
   "autoload": {

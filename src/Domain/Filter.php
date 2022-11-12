@@ -22,21 +22,21 @@ final class Filter implements ValueObject
      *
      * @var string
      */
-    private string $field;
+    private string $field; // @phpstan-ignore-line
 
     /**
      * The filter operator.
      *
      * @var Operator
      */
-    private Operator $operator;
+    private Operator $operator; // @phpstan-ignore-line
 
     /**
      * The filter field value.
      *
      * @var mixed
      */
-    private $value;
+    private $value; // @phpstan-ignore-line
 
     /**
      * Filter constructor.
@@ -67,7 +67,7 @@ final class Filter implements ValueObject
     public static function createFromArray(array $filter): self
     {
         // check if the array is indexed or associative.
-        $isIndexed = fn($source): bool => !([] === $source) && array_keys($source) === range(0, count($source) - 1);
+        $isIndexed = fn($source): bool => ([] !== $source) && array_keys($source) === range(0, count($source) - 1);
 
         return ($isIndexed($filter))
             ? self::create($filter[0], new Operator($filter[1]), $filter[2])

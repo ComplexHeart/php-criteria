@@ -27,7 +27,7 @@ final class Order implements ValueObject
      *
      * @var string
      */
-    private string $by;
+    private string $by; // @phpstan-ignore-line
 
     /**
      * Used to sort the result-set in ascending or descending order.
@@ -35,7 +35,7 @@ final class Order implements ValueObject
      *
      * @var string
      */
-    private string $type;
+    private string $type; // @phpstan-ignore-line
 
     /**
      * Order constructor.
