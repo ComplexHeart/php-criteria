@@ -17,11 +17,11 @@ final class Criteria implements ValueObject
 {
     use IsValueObject;
 
-    private FilterGroup $filters;
+    private FilterGroup $filters; // @phpstan-ignore-line
 
-    private Order $order;
+    private Order $order; // @phpstan-ignore-line
 
-    private Page $page;
+    private Page $page; // @phpstan-ignore-line
 
     /**
      * Criteria constructor.

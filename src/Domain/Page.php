@@ -18,9 +18,9 @@ final class Page implements ValueObject
 {
     use IsValueObject;
 
-    private int $limit;
+    private int $limit; // @phpstan-ignore-line
 
-    private int $offset;
+    private int $offset; // @phpstan-ignore-line
 
     /**
      * Page constructor.
