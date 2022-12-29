@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ComplexHeart\Domain\Criteria;
 
-use ComplexHeart\Domain\Model\ValueObjects\EnumValue;
 
 /**
  * Class Operator
@@ -12,60 +11,65 @@ use ComplexHeart\Domain\Model\ValueObjects\EnumValue;
  * @author Unay Santisteban <usantisteban@othercode.es>
  * @package ComplexHeart\Domain\Criteria
  */
-final class Operator extends EnumValue
+enum Operator: string
 {
-    public const EQUAL = '=';
-    public const NOT_EQUAL = '!=';
-    public const GT = '>';
-    public const GTE = '>=';
-    public const LT = '<';
-    public const LTE = '<=';
-    public const IN = 'in';
-    public const NOT_IN = 'notIn';
-    public const LIKE = 'like';
+    case EQUAL = '=';
+    case NOT_EQUAL = '!=';
+    case GT = '>';
+    case GTE = '>=';
+    case LT = '<';
+    case LTE = '<=';
+    case IN = 'in';
+    case NOT_IN = 'notIn';
+    case LIKE = 'like';
+
+    public static function make(string $value): self
+    {
+        return self::from($value);
+    }
 
     public static function equal(): self
     {
-        return new self(self::EQUAL);
+        return self::EQUAL;
     }
 
     public static function notEqual(): self
     {
-        return new self(self::NOT_EQUAL);
+        return self::NOT_EQUAL;
     }
 
     public static function gt(): self
     {
-        return new self(self::GT);
+        return self::GT;
     }
 
     public static function gte(): self
     {
-        return new self(self::GTE);
+        return self::GTE;
     }
 
     public static function lt(): self
     {
-        return new self(self::LT);
+        return self::LT;
     }
 
     public static function lte(): self
     {
-        return new self(self::LTE);
+        return self::LTE;
     }
 
     public static function in(): self
     {
-        return new self(self::IN);
+        return self::IN;
     }
 
     public static function notIn(): self
     {
-        return new self(self::NOT_IN);
+        return self::NOT_IN;
     }
 
     public static function like(): self
     {
-        return new self(self::LIKE);
+        return self::LIKE;
     }
 }

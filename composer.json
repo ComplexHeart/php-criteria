@@ -11,13 +11,15 @@
   ],
   "minimum-stability": "stable",
   "require": {
-    "php": "^8.0.2",
+    "php": "^8.1.0",
     "complex-heart/domain-model": "^2.0.0",
     "ext-json": "*"
   },
   "require-dev": {
-    "phpstan/phpstan": "^1.9.0",
-    "pestphp/pest": "^1.4"
+    "pestphp/pest": "^1.22.3",
+    "pestphp/pest-plugin-mock": "^1.0.0",
+    "pestphp/pest-plugin-faker": "^1.0.0",
+    "phpstan/phpstan": "^1.9.0"
   },
   "autoload": {
     "psr-4": {
@@ -31,6 +33,7 @@
   },
   "scripts": {
     "test": "vendor/bin/pest --configuration=phpunit.xml --coverage-clover=coverage.xml --log-junit=test.xml",
+    "test-cov": "vendor/bin/pest --configuration=phpunit.xml --coverage-html=coverage",
     "analyse": "vendor/bin/phpstan analyse src --no-progress --level=5"
   },
   "config": {
