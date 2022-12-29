@@ -36,7 +36,7 @@ final class Filter implements ValueObject
      *
      * @var mixed
      */
-    private $value; // @phpstan-ignore-line
+    private mixed $value; // @phpstan-ignore-line
 
     /**
      * Filter constructor.
@@ -45,7 +45,7 @@ final class Filter implements ValueObject
      * @param  Operator  $operator
      * @param  mixed  $value
      */
-    public function __construct(string $field, Operator $operator, $value)
+    public function __construct(string $field, Operator $operator, mixed $value)
     {
         $this->initialize(compact('field', 'operator', 'value'));
     }
@@ -59,7 +59,7 @@ final class Filter implements ValueObject
      *
      * @return Filter
      */
-    public static function create(string $field, Operator $operator, $value): self
+    public static function create(string $field, Operator $operator, mixed $value): self
     {
         return new self($field, $operator, $value);
     }
@@ -70,8 +70,8 @@ final class Filter implements ValueObject
         $isIndexed = fn($source): bool => ([] !== $source) && array_keys($source) === range(0, count($source) - 1);
 
         return ($isIndexed($filter))
-            ? self::create($filter[0], new Operator($filter[1]), $filter[2])
-            : self::create($filter['field'], new Operator($filter['operator']), $filter['value']);
+            ? self::create($filter[0], Operator::make($filter[1]), $filter[2])
+            : self::create($filter['field'], Operator::make($filter['operator']), $filter['value']);
     }
 
     public static function createEqual(string $field, $value): self
@@ -144,7 +144,7 @@ final class Filter implements ValueObject
      *
      * @return mixed
      */
-    public function value()
+    public function value(): mixed
     {
         return $this->value;
     }
@@ -154,7 +154,7 @@ final class Filter implements ValueObject
         return sprintf(
             '%s.%s.%s',
             $this->field(),
-            $this->operator(),
+            $this->operator()->value,
             is_array($this->value())
                 ? implode('|', $this->value())
                 : $this->value()
