@@ -4,23 +4,18 @@ declare(strict_types=1);
 
 namespace ComplexHeart\Domain\Criteria;
 
-use ComplexHeart\Contracts\Domain\Model\ValueObject;
-use ComplexHeart\Domain\Model\Traits\IsValueObject;
-
+use ComplexHeart\Domain\Contracts\Model\ValueObject;
+use ComplexHeart\Domain\Model\IsValueObject;
 
 /**
  * Class Page
  *
- * @author Unay Santisteban <usantisteban@othercode.es>
+ * @author Unay Santisteban <usantisteban@othercode.io>
  * @package ComplexHeart\SDK\Domain\Criteria
  */
 final class Page implements ValueObject
 {
     use IsValueObject;
-
-    private int $limit; // @phpstan-ignore-line
-
-    private int $offset; // @phpstan-ignore-line
 
     /**
      * Page constructor.
@@ -28,9 +23,11 @@ final class Page implements ValueObject
      * @param  int  $limit
      * @param  int  $offset
      */
-    public function __construct(int $limit = 25, int $offset = 0)
-    {
-        $this->initialize(compact('limit', 'offset'));
+    public function __construct(
+        private readonly int $limit = 25,
+        private readonly int $offset = 0,
+    ) {
+        $this->check();
     }
 
     public static function create(int $limit = 25, int $offset = 0): self

@@ -4,24 +4,18 @@ declare(strict_types=1);
 
 namespace ComplexHeart\Domain\Criteria;
 
-use ComplexHeart\Contracts\Domain\Model\ValueObject;
-use ComplexHeart\Domain\Model\Traits\IsValueObject;
+use ComplexHeart\Domain\Contracts\Model\ValueObject;
+use ComplexHeart\Domain\Model\IsValueObject;
 
 /**
  * Class Criteria
  *
- * @author Unay Santisteban <usantisteban@othercode.es>
+ * @author Unay Santisteban <usantisteban@othercode.io>
  * @package ComplexHeart\SDK\Domain\Criteria
  */
 final class Criteria implements ValueObject
 {
     use IsValueObject;
-
-    private FilterGroup $filters; // @phpstan-ignore-line
-
-    private Order $order; // @phpstan-ignore-line
-
-    private Page $page; // @phpstan-ignore-line
 
     /**
      * Criteria constructor.
@@ -30,9 +24,12 @@ final class Criteria implements ValueObject
      * @param  Order  $order
      * @param  Page  $page
      */
-    public function __construct(FilterGroup $filters, Order $order, Page $page)
-    {
-        $this->initialize(compact('filters', 'order', 'page'));
+    public function __construct(
+        private readonly FilterGroup $filters,
+        private readonly Order $order,
+        private readonly Page $page,
+    ) {
+        $this->check();
     }
 
     public static function create(FilterGroup $filters, Order $order, Page $page): self
@@ -47,45 +44,37 @@ final class Criteria implements ValueObject
 
     public function withFilters(FilterGroup $filters): self
     {
-        return $this->withOverrides(compact('filters'));
+        return new self($filters, $this->order, $this->page);
     }
 
     public function withOrder(Order $order): self
     {
-        return $this->withOverrides(compact('order'));
+        return new self($this->filters, $order, $this->page);
     }
 
     public function withOrderBy(string $field): self
     {
-        return $this->withOverrides([
-            'order' => Order::create($field, $this->orderType())
-        ]);
+        return new self($this->filters, Order::create($field, $this->orderType()), $this->page);
     }
 
     public function withOrderType(string $type): self
     {
-        return $this->withOverrides([
-            'order' => Order::create($this->orderBy(), $type)
-        ]);
+        return new self($this->filters, Order::create($this->orderBy(), $type), $this->page);
     }
 
     public function withPage(Page $page): self
     {
-        return $this->withOverrides(compact('page'));
+        return new self($this->filters, $this->order, $page);
     }
 
     public function withPageOffset(int $offset): self
     {
-        return $this->withOverrides([
-            'page' => Page::create($this->pageLimit(), $offset)
-        ]);
+        return new self($this->filters, $this->order, Page::create($this->pageLimit(), $offset));
     }
 
     public function withPageLimit(int $limit): self
     {
-        return $this->withOverrides([
-            'page' => Page::create($limit, $this->pageOffset())
-        ]);
+        return new self($this->filters, $this->order, Page::create($limit, $this->pageOffset()));
     }
 
     public function filters(): FilterGroup
@@ -93,13 +82,13 @@ final class Criteria implements ValueObject
         return $this->filters;
     }
 
-    public function addFilterEqual(string $field, $value): self
+    public function addFilterEqual(string $field, mixed $value): self
     {
         $this->filters->addFilter(Filter::createEqual($field, $value));
         return $this;
     }
 
-    public function addFilterNotEqual(string $field, $value): self
+    public function addFilterNotEqual(string $field, mixed $value): self
     {
         $this->filters->addFilter(Filter::createNotEqual($field, $value));
         return $this;
@@ -129,12 +118,22 @@ final class Criteria implements ValueObject
         return $this;
     }
 
+    /**
+     * @param  string  $field
+     * @param  array<scalar>  $value
+     * @return $this
+     */
     public function addFilterIn(string $field, array $value): self
     {
         $this->filters->addFilter(Filter::createIn($field, $value));
         return $this;
     }
 
+    /**
+     * @param  string  $field
+     * @param  array<scalar>  $value
+     * @return $this
+     */
     public function addFilterNotIn(string $field, array $value): self
     {
         $this->filters->addFilter(Filter::createNotIn($field, $value));

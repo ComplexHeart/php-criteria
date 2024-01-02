@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace ComplexHeart\Domain\Criteria;
 
-
 /**
  * Class Operator
  *
- * @author Unay Santisteban <usantisteban@othercode.es>
+ * @author Unay Santisteban <usantisteban@othercode.io>
  * @package ComplexHeart\Domain\Criteria
  */
 enum Operator: string

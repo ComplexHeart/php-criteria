@@ -11,7 +11,7 @@ use function Lambdish\Phunctional\map;
 /**
  * Class FilterGroup
  *
- * @author Unay Santisteban <usantisteban@othercode.es>
+ * @author Unay Santisteban <usantisteban@othercode.io>
  * @package ComplexHeart\Domain\Criteria
  */
 final class FilterGroup extends TypedCollection
@@ -23,7 +23,7 @@ final class FilterGroup extends TypedCollection
     /**
      * FilterGroup constructor.
      *
-     * @param  array  $items
+     * @param  array<Filter>  $items
      */
     public function __construct(array $items = [])
     {
@@ -35,6 +35,10 @@ final class FilterGroup extends TypedCollection
         return new self($filters);
     }
 
+    /**
+     * @param  array<string, scalar>|array<string>  $filters
+     * @return self
+     */
     public static function createFromArray(array $filters): self
     {
         return self::create(

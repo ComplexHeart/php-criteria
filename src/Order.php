@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace ComplexHeart\Domain\Criteria;
 
-use ComplexHeart\Contracts\Domain\Model\ValueObject;
-use ComplexHeart\Domain\Model\Traits\IsValueObject;
-
+use ComplexHeart\Domain\Contracts\Model\ValueObject;
+use ComplexHeart\Domain\Model\IsValueObject;
 
 /**
  * Class Order
  *
- * @author Unay Santisteban <usantisteban@othercode.es>
+ * @author Unay Santisteban <usantisteban@othercode.io>
  * @package ComplexHeart\SDK\Domain\Criteria
  */
 final class Order implements ValueObject
@@ -23,29 +22,16 @@ final class Order implements ValueObject
     public const TYPE_NONE = 'none';
 
     /**
-     * Used to sort the result-set by specific field.
-     *
-     * @var string
-     */
-    private string $by; // @phpstan-ignore-line
-
-    /**
-     * Used to sort the result-set in ascending or descending order.
-     * Ascending order by default.
-     *
-     * @var string
-     */
-    private string $type; // @phpstan-ignore-line
-
-    /**
      * Order constructor.
      *
      * @param  string  $by
      * @param  string  $type
      */
-    public function __construct(string $by, string $type = self::TYPE_ASC)
-    {
-        $this->initialize(compact('by', 'type'));
+    public function __construct(
+        private readonly string $by,
+        private readonly string $type = self::TYPE_ASC,
+    ) {
+        $this->check();
     }
 
     protected function invariantOrderByValueMustContainOnlyAlphanumericalCharacters(): bool

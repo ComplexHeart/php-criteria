@@ -24,7 +24,7 @@ namespace ComplexHeart\Test\Domain\Criteria;
 
 $criteria = Criteria::createDefault()
     ->addFilterEqual('name', 'Vincent')
-    ->addFilterNotEqual('surname', 'winnfield')
+    ->addFilterNotEqual('surname', 'Winnfield')
     ->addFilterGreaterThan('money', '10000')
     ->addFilterGreaterOrEqualThan('age', '35')
     ->addFilterLessThan('cars', '2')
