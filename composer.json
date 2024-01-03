@@ -19,7 +19,9 @@
     "pestphp/pest": "^2.0",
     "pestphp/pest-plugin-mock": "^2.0",
     "pestphp/pest-plugin-faker": "^2.0",
-    "phpstan/phpstan": "^1.0"
+    "phpstan/phpstan": "^1.0",
+    "phpstan/extension-installer": "^1.3",
+    "phpstan/phpstan-mockery": "^1.1"
   },
   "autoload": {
     "psr-4": {
@@ -28,13 +30,13 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "ComplexHeart\\Test\\Domain\\Criteria\\": "tests/"
+      "ComplexHeart\\Domain\\Criteria\\Test\\": "tests/"
     }
   },
   "scripts": {
     "test": "vendor/bin/pest --configuration=phpunit.xml --coverage-clover=coverage.xml --log-junit=test.xml",
     "test-cov": "vendor/bin/pest --configuration=phpunit.xml --coverage-html=coverage",
-    "analyse": "vendor/bin/phpstan analyse src --no-progress --level=8",
+    "analyse": "vendor/bin/phpstan analyse src tests --no-progress --level=8",
     "check": [
       "@analyse",
       "@test"
@@ -42,7 +44,8 @@
   },
   "config": {
     "allow-plugins": {
-      "pestphp/pest-plugin": true
+      "pestphp/pest-plugin": true,
+      "phpstan/extension-installer": true
     }
   }
 }
