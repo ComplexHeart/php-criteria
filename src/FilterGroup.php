@@ -13,6 +13,8 @@ use function Lambdish\Phunctional\map;
  *
  * @author Unay Santisteban <usantisteban@othercode.io>
  * @package ComplexHeart\Domain\Criteria
+ *
+ * @extends TypedCollection<int, Filter>
  */
 final class FilterGroup extends TypedCollection
 {
@@ -23,23 +25,27 @@ final class FilterGroup extends TypedCollection
     /**
      * FilterGroup constructor.
      *
-     * @param  array<Filter>  $items
+     * @param  array<int, Filter>  $items
      */
     public function __construct(array $items = [])
     {
         parent::__construct(array_unique($items));
     }
 
-    public static function create(Filter ...$filters): self
+    /**
+     * @param  Filter  ...$filters
+     * @return FilterGroup
+     */
+    public static function create(Filter ...$filters): FilterGroup
     {
-        return new self($filters);
+        return new self(array_values($filters));
     }
 
     /**
-     * @param  array<string, scalar>|array<int, array<int, string>>  $filters
-     * @return self
+     * @param  array<int, array<int|string, mixed>>  $filters
+     * @return FilterGroup
      */
-    public static function createFromArray(array $filters): self
+    public static function createFromArray(array $filters): FilterGroup
     {
         return self::create(
             ...map(fn(array $filter): Filter => Filter::createFromArray($filter), $filters)
