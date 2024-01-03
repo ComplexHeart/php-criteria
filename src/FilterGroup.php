@@ -36,7 +36,7 @@ final class FilterGroup extends TypedCollection
     }
 
     /**
-     * @param  array<string, scalar>|array<string>  $filters
+     * @param  array<string, scalar>|array<int, array<int, string>>  $filters
      * @return self
      */
     public static function createFromArray(array $filters): self
