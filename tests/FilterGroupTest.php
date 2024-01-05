@@ -6,18 +6,18 @@ use ComplexHeart\Domain\Criteria\Filter;
 use ComplexHeart\Domain\Criteria\FilterGroup;
 use ComplexHeart\Domain\Criteria\Operator;
 
-test('FilterGroup only accept Filter instances.', function () {
+test('FilterGroup should only accept Filter instances.', function () {
     expect(FilterGroup::create())
         ->toBeInstanceOf(FilterGroup::class)
         ->toHaveCount(0);
 });
 
-test('Create FilterGroup from primitive array of values', function () {
+test('FilterGroup should be created from primitive array of values.', function () {
     expect(FilterGroup::createFromArray([['field', '=', 'value']]))
         ->toHaveCount(1);
 });
 
-test('Create FilterGroup without duplicate filters.', function () {
+test('FilterGroup should be created without duplicated filters.', function () {
     $filters = [
         ['field', '=', 'value'],
         ['field', '=', 'value'],
@@ -29,4 +29,22 @@ test('Create FilterGroup without duplicate filters.', function () {
 
     expect($g)
         ->toHaveCount(2);
+});
+
+test('FilterGroup should add new filter with fluent interface.', function () {
+    $filters = FilterGroup::create()
+        ->addFilterEqual('name', 'Vincent')
+        ->addFilterNotEqual('surname', 'Winnfield')
+        ->addFilterGreaterThan('money', 10000)
+        ->addFilterGreaterOrEqualThan('age', 35)
+        ->addFilterLessThan('cars', 2)
+        ->addFilterLessOrEqualThan('houses', 2)
+        ->addFilterLike('bio', 'pork lover')
+        ->addFilterNotLike('bio', 'dog lover')
+        ->addFilterContains('name', 'nce')
+        ->addFilterNotContains('name', 'les')
+        ->addFilterIn('boss', ['Marcellus', 'Mia'])
+        ->addFilterNotIn('hates', ['Ringo', 'Yolanda']);
+
+    expect($filters)->toHaveCount(12);
 });

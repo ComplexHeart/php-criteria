@@ -113,6 +113,21 @@ final class Filter implements ValueObject
         return self::create($field, Operator::like(), $value);
     }
 
+    public static function createNotLike(string $field, mixed $value): self
+    {
+        return self::create($field, Operator::notLike(), $value);
+    }
+
+    public static function createContains(string $field, mixed $value): self
+    {
+        return self::create($field, Operator::contains(), $value);
+    }
+
+    public static function createNotContains(string $field, mixed $value): self
+    {
+        return self::create($field, Operator::notContains(), $value);
+    }
+
     /**
      * Retrieve the filter field value object.
      *
