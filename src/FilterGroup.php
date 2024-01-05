@@ -70,6 +70,88 @@ final class FilterGroup extends TypedCollection
         return $this;
     }
 
+    public function addFilterEqual(string $field, mixed $value): FilterGroup
+    {
+        $this->addFilter(Filter::createEqual($field, $value));
+        return $this;
+    }
+
+    public function addFilterNotEqual(string $field, mixed $value): FilterGroup
+    {
+        $this->addFilter(Filter::createNotEqual($field, $value));
+        return $this;
+    }
+
+    public function addFilterGreaterThan(string $field, mixed $value): FilterGroup
+    {
+        $this->addFilter(Filter::createGreaterThan($field, $value));
+        return $this;
+    }
+
+    public function addFilterGreaterOrEqualThan(string $field, mixed $value): FilterGroup
+    {
+        $this->addFilter(Filter::createGreaterOrEqualThan($field, $value));
+        return $this;
+    }
+
+    public function addFilterLessThan(string $field, mixed $value): FilterGroup
+    {
+        $this->addFilter(Filter::createLessThan($field, $value));
+        return $this;
+    }
+
+    public function addFilterLessOrEqualThan(string $field, mixed $value): FilterGroup
+    {
+        $this->addFilter(Filter::createLessOrEqualThan($field, $value));
+        return $this;
+    }
+
+    /**
+     * @param  string  $field
+     * @param  array<scalar>  $value
+     * @return $this
+     */
+    public function addFilterIn(string $field, array $value): FilterGroup
+    {
+        $this->addFilter(Filter::createIn($field, $value));
+        return $this;
+    }
+
+    /**
+     * @param  string  $field
+     * @param  array<scalar>  $value
+     * @return $this
+     */
+    public function addFilterNotIn(string $field, array $value): FilterGroup
+    {
+        $this->addFilter(Filter::createNotIn($field, $value));
+        return $this;
+    }
+
+    public function addFilterLike(string $field, string $value): FilterGroup
+    {
+        $this->addFilter(Filter::createLike($field, $value));
+        return $this;
+    }
+
+    public function addFilterNotLike(string $field, string $value): FilterGroup
+    {
+        $this->addFilter(Filter::createNotLike($field, $value));
+        return $this;
+    }
+
+    public function addFilterContains(string $field, string $value): FilterGroup
+    {
+        $this->addFilter(Filter::createContains($field, $value));
+        return $this;
+    }
+
+    public function addFilterNotContains(string $field, string $value): FilterGroup
+    {
+        $this->addFilter(Filter::createNotContains($field, $value));
+        return $this;
+    }
+
     /**
      * Transform the FilterGroup to a string.
      *
@@ -77,8 +159,6 @@ final class FilterGroup extends TypedCollection
      */
     public function __toString(): string
     {
-        return $this->toBase()
-            ->map(fn(Filter $filter): string => $filter->__toString())
-            ->join('+');
+        return join('+', map(fn(Filter $filter): string => $filter->__toString(), $this));
     }
 }

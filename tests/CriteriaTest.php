@@ -9,13 +9,13 @@ use ComplexHeart\Domain\Criteria\FilterGroup;
 use ComplexHeart\Domain\Criteria\Order;
 use ComplexHeart\Domain\Criteria\Page;
 
-test('Change complete and partially the criteria order parameter.', function () {
-    $c = Criteria::createDefault()
+test('Criteria should change complete and partially the criteria order parameter.', function () {
+    $c = Criteria::default()
         ->withOrder(Order::createDescBy('name'));
 
-    expect($c->orderBy())->toBe('name');
-    expect($c->orderType())->toBe('desc');
-    expect($c->order()->isNone())->toBe(false);
+    expect($c->orderBy())->toBe('name')
+        ->and($c->orderType())->toBe('desc')
+        ->and($c->order()->isNone())->toBe(false);
 
     $c = $c->withOrder(Order::createAscBy('name'));
     expect($c->orderType())->toBe('asc');
@@ -24,53 +24,63 @@ test('Change complete and partially the criteria order parameter.', function () 
     expect($c->orderBy())->toBe('surname');
 
     $c = $c->withOrderType(Order::TYPE_ASC);
-    expect($c->orderType())->toBe('asc');
-
-    expect($c->order())->toBeInstanceOf(Order::class);
+    expect($c->orderType())->toBe('asc')
+        ->and($c->order())->toBeInstanceOf(Order::class);
 });
 
-test('Change complete and partially the criteria page parameter.', function () {
-    $c = Criteria::createDefault()
+test('Criteria should change complete and partially the criteria page parameter.', function () {
+    $c = Criteria::default()
         ->withPage(Page::create(100, 50));
 
-    expect($c->pageLimit())->toBe(100);
-    expect($c->pageOffset())->toBe(50);
+    expect($c->pageLimit())->toBe(100)
+        ->and($c->pageOffset())->toBe(50);
 
     $c = $c->withPageLimit(42);
     expect($c->pageLimit())->toBe(42);
 
     $c = $c->withPageOffset(10);
-    expect($c->pageOffset())->toBe(10);
-
-    expect($c->page())->toBeInstanceOf(Page::class);
+    expect($c->pageOffset())->toBe(10)
+        ->and($c->page())->toBeInstanceOf(Page::class);
 });
 
-test('Change the complete filter object from criteria.', function () {
-    $c = Criteria::createDefault()
-        ->withFilters(FilterGroup::createFromArray([['field', '=', 'value']]));
+test('Criteria should change the complete filter groups.', function () {
+    $c = Criteria::default()
+        ->withFilterGroups([
+            FilterGroup::createFromArray([['field', '=', 'one']])
+        ])
+        ->withFilterGroups([
+            FilterGroup::createFromArray([['field', '=', 'two']]),
+            FilterGroup::createFromArray([['field', '=', 'three']]),
+            FilterGroup::createFromArray([['field', '=', 'four']]),
+        ]);
 
-    expect($c->filters())->toHaveCount(1);
+    expect($c->groups())->toHaveCount(3);
 });
 
-test('Add filters to criteria object.', function () {
-    $c = Criteria::createDefault()
-        ->addFilterEqual('name', 'Vincent')
-        ->addFilterNotEqual('surname', 'winnfield')
-        ->addFilterGreaterThan('money', '10000')
-        ->addFilterGreaterOrEqualThan('age', '35')
-        ->addFilterLessThan('cars', '2')
-        ->addFilterLessOrEqualThan('houses', '2')
-        ->addFilterLike('favoriteMeal', 'pork')
-        ->addFilterIn('boss', ['marcellus', 'mia'])
-        ->addFilterNotIn('hates', ['ringo', 'yolanda']);
+test('Criteria should add or filter group to criteria object.', function () {
+    $c = Criteria::default()
+        ->withFilterGroup(fn(FilterGroup $g): FilterGroup => $g
+            ->addFilterEqual('name', 'Vincent')
+            ->addFilterEqual('status', 'deceased')
+        )
+        ->withFilterGroup(fn(FilterGroup $g): FilterGroup => $g
+            ->addFilterEqual('name', 'Jules')
+            ->addFilterEqual('deceased', 'alive')
+        );
 
-    expect($c->filters())->toHaveCount(9);
+    $groups = $c->groups();
+
+    expect($groups)->toHaveCount(2)
+        ->and($groups[0])->toHaveCount(2)
+        ->and($groups[1])->toHaveCount(2);
 });
 
-test('Criteria object is correctly serialized to string.', function () {
-    $c = Criteria::createDefault()
-        ->addFilterEqual('name', 'Vincent')
-        ->addFilterGreaterOrEqualThan('age', '35')
+test('Criteria should be correctly serialized to string.', function () {
+    $c = Criteria::default()
+        ->withFilterGroup(fn(FilterGroup $group): FilterGroup => $group
+            ->addFilterEqual('name', 'Vincent')
+            ->addFilterGreaterOrEqualThan('age', '35')
+        )
         ->withPageLimit(100)
         ->withPageOffset(0)
         ->withOrderBy('name')
