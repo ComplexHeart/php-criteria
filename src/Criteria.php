@@ -81,14 +81,23 @@ final class Criteria implements ValueObject
         return self::create($this->groups, $order, $this->page);
     }
 
+    public function withOrderRandom(): self
+    {
+        return self::create($this->groups, Order::random(), $this->page);
+    }
+
     public function withOrderBy(string $field): self
     {
-        return self::create($this->groups, Order::create($field, $this->orderType()), $this->page);
+        return self::create($this->groups, Order::create($field, $this->order->type()), $this->page);
     }
 
     public function withOrderType(string $type): self
     {
-        return self::create($this->groups, Order::create($this->orderBy(), $type), $this->page);
+        return self::create(
+            $this->groups,
+            Order::create($this->orderBy(), OrderType::make($type)),
+            $this->page
+        );
     }
 
     public function withPage(Page $page): self
@@ -98,7 +107,11 @@ final class Criteria implements ValueObject
 
     public function withPageOffset(int $offset): self
     {
-        return self::create($this->groups, $this->order, Page::create($this->pageLimit(), $offset));
+        return self::create(
+            $this->groups,
+            $this->order,
+            Page::create($this->pageLimit(), $offset)
+        );
     }
 
     public function withPageLimit(int $limit): self
@@ -128,7 +141,7 @@ final class Criteria implements ValueObject
 
     public function orderType(): string
     {
-        return $this->order->type();
+        return $this->order->type()->value;
     }
 
     public function page(): Page

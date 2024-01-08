@@ -24,8 +24,8 @@ test('FilterGroup should be created without duplicated filters.', function () {
     ];
 
     $g = FilterGroup::createFromArray($filters)
-        ->addFilter(Filter::create('field', Operator::equal(), 'value'))
-        ->addFilter(Filter::create('name', Operator::equal(), 'Vega'));
+        ->addFilter(Filter::create('field', Operator::EQUAL, 'value'))
+        ->addFilter(Filter::create('name', Operator::EQUAL, 'Vega'));
 
     expect($g)
         ->toHaveCount(2);

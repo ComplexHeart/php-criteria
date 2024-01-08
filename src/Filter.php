@@ -70,62 +70,62 @@ final class Filter implements ValueObject
 
     public static function createEqual(string $field, mixed $value): self
     {
-        return self::create($field, Operator::equal(), $value);
+        return self::create($field, Operator::EQUAL, $value);
     }
 
     public static function createNotEqual(string $field, mixed $value): self
     {
-        return self::create($field, Operator::notEqual(), $value);
+        return self::create($field, Operator::NOT_LIKE, $value);
     }
 
     public static function createGreaterThan(string $field, mixed $value): self
     {
-        return self::create($field, Operator::gt(), $value);
+        return self::create($field, Operator::GT, $value);
     }
 
     public static function createGreaterOrEqualThan(string $field, mixed $value): self
     {
-        return self::create($field, Operator::gte(), $value);
+        return self::create($field, Operator::GTE, $value);
     }
 
     public static function createLessThan(string $field, mixed $value): self
     {
-        return self::create($field, Operator::lt(), $value);
+        return self::create($field, Operator::LT, $value);
     }
 
     public static function createLessOrEqualThan(string $field, mixed $value): self
     {
-        return self::create($field, Operator::lte(), $value);
+        return self::create($field, Operator::LTE, $value);
     }
 
     public static function createIn(string $field, mixed $value): self
     {
-        return self::create($field, Operator::in(), $value);
+        return self::create($field, Operator::IN, $value);
     }
 
     public static function createNotIn(string $field, mixed $value): self
     {
-        return self::create($field, Operator::notIn(), $value);
+        return self::create($field, Operator::NOT_IN, $value);
     }
 
     public static function createLike(string $field, mixed $value): self
     {
-        return self::create($field, Operator::like(), $value);
+        return self::create($field, Operator::LIKE, $value);
     }
 
     public static function createNotLike(string $field, mixed $value): self
     {
-        return self::create($field, Operator::notLike(), $value);
+        return self::create($field, Operator::NOT_LIKE, $value);
     }
 
     public static function createContains(string $field, mixed $value): self
     {
-        return self::create($field, Operator::contains(), $value);
+        return self::create($field, Operator::CONTAINS, $value);
     }
 
     public static function createNotContains(string $field, mixed $value): self
     {
-        return self::create($field, Operator::notContains(), $value);
+        return self::create($field, Operator::NOT_CONTAINS, $value);
     }
 
     /**

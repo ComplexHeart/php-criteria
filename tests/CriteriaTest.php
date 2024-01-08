@@ -15,15 +15,21 @@ test('Criteria should change complete and partially the criteria order parameter
 
     expect($c->orderBy())->toBe('name')
         ->and($c->orderType())->toBe('desc')
-        ->and($c->order()->isNone())->toBe(false);
+        ->and($c->order()->isNone())->toBeFalse();
 
     $c = $c->withOrder(Order::createAscBy('name'));
     expect($c->orderType())->toBe('asc');
 
+    $c = $c->withOrder(Order::random());
+    expect($c->order()->isRandom())->toBeTrue();
+
+    $c = $c->withOrderRandom();
+    expect($c->order()->isRandom())->toBeTrue();
+
     $c = $c->withOrderBy('surname');
     expect($c->orderBy())->toBe('surname');
 
-    $c = $c->withOrderType(Order::TYPE_ASC);
+    $c = $c->withOrderType('asc');
     expect($c->orderType())->toBe('asc')
         ->and($c->order())->toBeInstanceOf(Order::class);
 });
@@ -84,7 +90,7 @@ test('Criteria should be correctly serialized to string.', function () {
         ->withPageLimit(100)
         ->withPageOffset(0)
         ->withOrderBy('name')
-        ->withOrderType(Order::TYPE_ASC);
+        ->withOrderType('asc');
 
     expect($c->__toString())->toBe('name.=.Vincent+age.>=.35#name.asc#100.0');
 });
