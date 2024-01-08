@@ -17,11 +17,6 @@ final class Order implements ValueObject
 {
     use IsValueObject;
 
-    public const TYPE_ASC = 'asc';
-    public const TYPE_DESC = 'desc';
-    public const TYPE_NONE = 'none';
-    public const TYPE_RANDOM = 'random';
-
     /**
      * Order constructor.
      *
