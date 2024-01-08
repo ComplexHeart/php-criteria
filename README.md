@@ -31,7 +31,7 @@ $g1 = FilterGroup::create()
 $criteria = Criteria::default()
     ->withFilterGroup($g1)
     ->withOrderBy('surname')
-    ->withOrderType(Order::TYPE_ASC)
+    ->withOrderType('asc')
     ->withPageLimit(10)
     ->withPageOffset(5);
 
@@ -44,7 +44,7 @@ $criteria = Criteria::default()
         ->addFilterGreaterThan('followers', 7000)
         ->addFilterIn('country', ['es', 'fr']))
     ->withOrderBy('surname')
-    ->withOrderType(Order::TYPE_ASC)
+    ->withOrderType('asc')
     ->withPageLimit(10)
     ->withPageOffset(5);
 
@@ -55,7 +55,7 @@ $users = $repository->match($criteria);
 ```
 
 A `FilterGroup` is a set of filters or conditions that must match all together (`AND`). To match one group or another
-(OR), just add more `FilterGroup`.
+(`OR`), just add more `FilterGroup`.
 
 ```php
 
