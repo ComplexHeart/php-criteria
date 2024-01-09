@@ -4,10 +4,61 @@ declare(strict_types=1);
 
 namespace ComplexHeart\Test\Domain\Criteria;
 
+use ComplexHeart\Domain\Criteria\Contracts\CriteriaSource;
 use ComplexHeart\Domain\Criteria\Criteria;
+use ComplexHeart\Domain\Criteria\Errors\CriteriaError;
 use ComplexHeart\Domain\Criteria\FilterGroup;
 use ComplexHeart\Domain\Criteria\Order;
 use ComplexHeart\Domain\Criteria\Page;
+
+test('Criteria should be successfully created from source.', function () {
+    $c = Criteria::fromSource(new class implements CriteriaSource {
+        public function filterGroups(): array
+        {
+            return [
+                [
+                    ['field' => 'name', 'operator' => '=', 'value' => 'Jules'],
+                    ['field' => 'surname', 'operator' => '=', 'value' => 'Winnfield'],
+                ]
+            ];
+        }
+
+        public function orderType(): string
+        {
+            return 'asc';
+        }
+
+        public function orderBy(): string
+        {
+            return 'name';
+        }
+
+        public function pageLimit(): int
+        {
+            return 25;
+        }
+
+        public function pageOffset(): int
+        {
+            return 0;
+        }
+    });
+
+    expect($c->groups())->toHaveCount(1)
+        ->and($c->groups()[0])->toHaveCount(2)
+        ->and($c->orderBy())->toBe('name')
+        ->and($c->orderType())->toBe('asc')
+        ->and($c->pageLimit())->toBe(25)
+        ->and($c->pageOffset())->toBe(0);
+});
+
+test('Criteria should throw exception for invalid filter groups.', function () {
+    try {
+        Criteria::default()->withFilterGroup(fn() => [1, 2, 3]);
+    } catch (CriteriaError $e) {
+        expect($e->violations())->toHaveCount(1);
+    }
+});
 
 test('Criteria should change complete and partially the criteria order parameter.', function () {
     $c = Criteria::default()

@@ -6,6 +6,8 @@ namespace ComplexHeart\Domain\Criteria;
 
 use Closure;
 use ComplexHeart\Domain\Contracts\Model\ValueObject;
+use ComplexHeart\Domain\Criteria\Contracts\CriteriaSource;
+use ComplexHeart\Domain\Criteria\Errors\CriteriaError;
 use ComplexHeart\Domain\Model\IsValueObject;
 
 use function Lambdish\Phunctional\map;
@@ -32,6 +34,27 @@ final class Criteria implements ValueObject
         private readonly Order $order,
         private readonly Page $page,
     ) {
+        $this->check();
+    }
+
+    protected function invariantGroupsMustBeArrayOfFilterGroup(): bool
+    {
+        foreach ($this->groups as $group) {
+            if (!($group instanceof FilterGroup)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param  array<string>  $violations
+     * @return void
+     */
+    protected function invariantHandler(array $violations): void
+    {
+        throw CriteriaError::create('Unable to create criteria object.', $violations);
     }
 
     /**
@@ -42,12 +65,30 @@ final class Criteria implements ValueObject
      */
     public static function create(array $groups, Order $order, Page $page): self
     {
-        return new self($groups, $order, $page);
+        return new self(groups: $groups, order: $order, page: $page);
+    }
+
+    /**
+     * Creates a new instance of Criteria from the given data source.
+     *
+     * @param  CriteriaSource  $source
+     * @return Criteria
+     */
+    public static function fromSource(CriteriaSource $source): self
+    {
+        return Criteria::create(
+            groups: map(
+                fn(array $g): FilterGroup => FilterGroup::createFromArray($g),
+                $source->filterGroups()
+            ),
+            order: Order::create($source->orderBy(), OrderType::make($source->orderType())),
+            page: Page::create($source->pageLimit(), $source->pageOffset())
+        );
     }
 
     public static function default(): self
     {
-        return self::create([], Order::none(), Page::create());
+        return self::create(groups: [], order: Order::none(), page: Page::create());
     }
 
     /**
@@ -58,7 +99,11 @@ final class Criteria implements ValueObject
      */
     public function withFilterGroups(array $groups): self
     {
-        return self::create($groups, $this->order, $this->page);
+        return self::create(
+            groups: $groups,
+            order: $this->order,
+            page: $this->page
+        );
     }
 
     /**
@@ -73,50 +118,61 @@ final class Criteria implements ValueObject
             $group = $group(new FilterGroup());
         }
 
-        return $this->withFilterGroups(array_merge($this->groups, [$group]));
+        // push single FilterGroup into an array.
+        $group = is_array($group) ? $group : [$group];
+
+        return $this->withFilterGroups(groups: array_merge($this->groups, $group));
     }
 
     public function withOrder(Order $order): self
     {
-        return self::create($this->groups, $order, $this->page);
+        return self::create(groups: $this->groups, order: $order, page: $this->page);
     }
 
     public function withOrderRandom(): self
     {
-        return self::create($this->groups, Order::random(), $this->page);
+        return self::create(groups: $this->groups, order: Order::random(), page: $this->page);
     }
 
     public function withOrderBy(string $field): self
     {
-        return self::create($this->groups, Order::create($field, $this->order->type()), $this->page);
+        return self::create(
+            groups: $this->groups,
+            order: Order::create($field, $this->order->type()),
+            page: $this->page
+        );
     }
 
     public function withOrderType(string $type): self
     {
         return self::create(
-            $this->groups,
-            Order::create($this->orderBy(), OrderType::make($type)),
-            $this->page
+            groups: $this->groups,
+            order: Order::create($this->orderBy(), OrderType::make($type)),
+            page: $this->page
         );
     }
 
     public function withPage(Page $page): self
     {
-        return self::create($this->groups, $this->order, $page);
+        return self::create(groups: $this->groups, order: $this->order, page: $page);
     }
 
     public function withPageOffset(int $offset): self
     {
         return self::create(
-            $this->groups,
-            $this->order,
-            Page::create($this->pageLimit(), $offset)
+            groups: $this->groups,
+            order: $this->order,
+            page: Page::create($this->pageLimit(), $offset)
         );
     }
 
     public function withPageLimit(int $limit): self
     {
-        return self::create($this->groups, $this->order, Page::create($limit, $this->pageOffset()));
+        return self::create(
+            groups: $this->groups,
+            order: $this->order,
+            page: Page::create($limit, $this->pageOffset())
+        );
     }
 
     /**
