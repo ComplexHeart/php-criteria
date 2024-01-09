@@ -50,12 +50,12 @@ final class Order implements ValueObject
         return self::create($by, OrderType::DESC);
     }
 
-    public static function none(): Order
+    public static function none(): self
     {
         return self::create('', OrderType::NONE);
     }
 
-    public static function random(): Order
+    public static function random(): self
     {
         return self::create('', OrderType::RANDOM);
     }

@@ -36,7 +36,7 @@ final class FilterGroup extends TypedCollection
      * @param  Filter  ...$filters
      * @return FilterGroup
      */
-    public static function create(Filter ...$filters): FilterGroup
+    public static function create(Filter ...$filters): self
     {
         return new self(array_values($filters));
     }
@@ -45,7 +45,7 @@ final class FilterGroup extends TypedCollection
      * @param  array<int, array<int|string, mixed>>  $filters
      * @return FilterGroup
      */
-    public static function createFromArray(array $filters): FilterGroup
+    public static function createFromArray(array $filters): self
     {
         return self::create(
             ...map(fn(array $filter): Filter => Filter::createFromArray($filter), $filters)
@@ -59,7 +59,7 @@ final class FilterGroup extends TypedCollection
      *
      * @return self
      */
-    public function addFilter(Filter $new): FilterGroup
+    public function addFilter(Filter $new): self
     {
         if ($this->filter(fn(Filter $filter): bool => $filter->equals($new))->count() > 0) {
             return $this;
@@ -70,37 +70,37 @@ final class FilterGroup extends TypedCollection
         return $this;
     }
 
-    public function addFilterEqual(string $field, mixed $value): FilterGroup
+    public function addFilterEqual(string $field, mixed $value): self
     {
         $this->addFilter(Filter::createEqual($field, $value));
         return $this;
     }
 
-    public function addFilterNotEqual(string $field, mixed $value): FilterGroup
+    public function addFilterNotEqual(string $field, mixed $value): self
     {
         $this->addFilter(Filter::createNotEqual($field, $value));
         return $this;
     }
 
-    public function addFilterGreaterThan(string $field, mixed $value): FilterGroup
+    public function addFilterGreaterThan(string $field, mixed $value): self
     {
         $this->addFilter(Filter::createGreaterThan($field, $value));
         return $this;
     }
 
-    public function addFilterGreaterOrEqualThan(string $field, mixed $value): FilterGroup
+    public function addFilterGreaterOrEqualThan(string $field, mixed $value): self
     {
         $this->addFilter(Filter::createGreaterOrEqualThan($field, $value));
         return $this;
     }
 
-    public function addFilterLessThan(string $field, mixed $value): FilterGroup
+    public function addFilterLessThan(string $field, mixed $value): self
     {
         $this->addFilter(Filter::createLessThan($field, $value));
         return $this;
     }
 
-    public function addFilterLessOrEqualThan(string $field, mixed $value): FilterGroup
+    public function addFilterLessOrEqualThan(string $field, mixed $value): self
     {
         $this->addFilter(Filter::createLessOrEqualThan($field, $value));
         return $this;
@@ -111,7 +111,7 @@ final class FilterGroup extends TypedCollection
      * @param  array<scalar>  $value
      * @return $this
      */
-    public function addFilterIn(string $field, array $value): FilterGroup
+    public function addFilterIn(string $field, array $value): self
     {
         $this->addFilter(Filter::createIn($field, $value));
         return $this;
@@ -122,31 +122,31 @@ final class FilterGroup extends TypedCollection
      * @param  array<scalar>  $value
      * @return $this
      */
-    public function addFilterNotIn(string $field, array $value): FilterGroup
+    public function addFilterNotIn(string $field, array $value): self
     {
         $this->addFilter(Filter::createNotIn($field, $value));
         return $this;
     }
 
-    public function addFilterLike(string $field, string $value): FilterGroup
+    public function addFilterLike(string $field, string $value): self
     {
         $this->addFilter(Filter::createLike($field, $value));
         return $this;
     }
 
-    public function addFilterNotLike(string $field, string $value): FilterGroup
+    public function addFilterNotLike(string $field, string $value): self
     {
         $this->addFilter(Filter::createNotLike($field, $value));
         return $this;
     }
 
-    public function addFilterContains(string $field, string $value): FilterGroup
+    public function addFilterContains(string $field, string $value): self
     {
         $this->addFilter(Filter::createContains($field, $value));
         return $this;
     }
 
-    public function addFilterNotContains(string $field, string $value): FilterGroup
+    public function addFilterNotContains(string $field, string $value): self
     {
         $this->addFilter(Filter::createNotContains($field, $value));
         return $this;
