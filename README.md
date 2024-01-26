@@ -32,8 +32,8 @@ $criteria = Criteria::default()
     ->withFilterGroup($g1)
     ->withOrderBy('surname')
     ->withOrderType('asc')
-    ->withPageLimit(10)
-    ->withPageOffset(5);
+    ->withPageLimit(25)
+    ->withPageOffset(50);
 
 $users = $repository->match($criteria);
 
@@ -45,8 +45,8 @@ $criteria = Criteria::default()
         ->addFilterIn('country', ['es', 'fr']))
     ->withOrderBy('surname')
     ->withOrderType('asc')
-    ->withPageLimit(10)
-    ->withPageOffset(5);
+    ->withPageLimit(25)
+    ->withPageOffset(50);
 
 // In SQL, we may have something like:
 // WHERE status = 1 AND followers >= 700 AND country in ('es', 'fr')
@@ -66,6 +66,5 @@ $criteria = Criteria::default()
     ->withFilterGroup(FilterGroup::create()->addFilterContains('content', $term))
     ->withOrderBy('created_at')
     ->withOrderType(Order::TYPE_ASC)
-    ->withPageLimit(10)
-    ->withPageOffset(5);
+    ->withPageNumber(3);
 ```

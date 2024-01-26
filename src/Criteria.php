@@ -110,7 +110,7 @@ final class Criteria implements ValueObject
      * Returns a new instance of the criteria adding the given FilterGroup.
      *
      * @param  FilterGroup|Closure  $group
-     * @return $this
+     * @return Criteria
      */
     public function withFilterGroup(FilterGroup|Closure $group): self
     {
@@ -172,6 +172,15 @@ final class Criteria implements ValueObject
             groups: $this->groups,
             order: $this->order,
             page: Page::create($limit, $this->pageOffset())
+        );
+    }
+
+    public function withPageNumber(int $number, int $size = null): self
+    {
+        return self::create(
+            groups: $this->groups,
+            order: $this->order,
+            page: Page::number($number, is_null($size) ? $this->page->limit() : $size)
         );
     }
 

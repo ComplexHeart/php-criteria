@@ -145,3 +145,11 @@ test('Criteria should be correctly serialized to string.', function () {
 
     expect($c->__toString())->toBe('name.=.Vincent+age.>=.35#name.asc#100.0');
 });
+
+test('Criteria should configure limit and offset using page number', function () {
+    $c = Criteria::default()
+        ->withPageNumber(3, 25);
+
+    expect($c->page()->limit())->toBe(25)
+        ->and($c->page()->offset())->toBe(50);
+});
