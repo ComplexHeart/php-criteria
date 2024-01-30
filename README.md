@@ -1,10 +1,10 @@
-# Criteria (a.k.a Filter)
+# Criteria
 
 [![Test](https://github.com/ComplexHeart/php-criteria/actions/workflows/test.yml/badge.svg)](https://github.com/ComplexHeart/php-criteria/actions/workflows/test.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ComplexHeart_php-criteria&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ComplexHeart_php-criteria)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ComplexHeart_php-criteria&metric=coverage)](https://sonarcloud.io/summary/new_code?id=ComplexHeart_php-criteria)
 
-Small implementation of a filter criteria pattern in PHP for Complex Heart SDK. Compose several filters using fluent
+Small implementation of a criteria pattern in PHP for Complex Heart SDK. Compose several filters using fluent
 interface.
 
 ## Installation
@@ -58,7 +58,6 @@ A `FilterGroup` is a set of filters or conditions that must match all together (
 (`OR`), just add more `FilterGroup`.
 
 ```php
-
 // Match articles with given term in title, or in tagline, or in content.
 $criteria = Criteria::default()
     ->withFilterGroup(FilterGroup::create()->addFilterContains('title', $term))
@@ -68,3 +67,5 @@ $criteria = Criteria::default()
     ->withOrderType(Order::TYPE_ASC)
     ->withPageNumber(3);
 ```
+
+

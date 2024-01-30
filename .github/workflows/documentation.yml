@@ -1,0 +1,48 @@
+name: Documentation
+
+on:
+  push:
+    branches: [ 'main' ]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-version: [ '8.2' ]
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring
+          coverage: xdebug
+          tools: composer:v2
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.composer/cache
+          key: php-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: php-${{ matrix.php-version }}-composer-
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Install Dependencies
+        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: Copy Files
+        run: cp README.md wiki/Home.md
+
+      - name: Publish documentation to Wiki
+        uses: SwiftDocOrg/github-wiki-publish-action@v1
+        with:
+          path: "wiki/"
+        env:
+          GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}

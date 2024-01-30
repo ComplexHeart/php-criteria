@@ -12,13 +12,13 @@ namespace ComplexHeart\Domain\Criteria;
  */
 enum OrderType: string
 {
-    case ASC = 'asc';
-    case DESC = 'desc';
-    case NONE = 'none';
-    case RANDOM = 'random';
+    case ASC = 'ASC';
+    case DESC = 'DESC';
+    case NONE = 'NONE';
+    case RANDOM = 'RANDOM';
 
     public static function make(string $value): self
     {
-        return self::from($value);
+        return self::from(strtoupper($value));
     }
 }

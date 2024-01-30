@@ -27,20 +27,10 @@ final class Page implements ValueObject
      * @param  int  $offset
      */
     public function __construct(
-        private readonly int $limit = self::DEFAULT_LIMIT,
-        private readonly int $offset = self::DEFAULT_OFFSET,
+        private readonly int $limit,
+        private readonly int $offset,
     ) {
         $this->check();
-    }
-
-    public static function create(int $limit = self::DEFAULT_LIMIT, int $offset = self::DEFAULT_OFFSET): self
-    {
-        return new self($limit, $offset);
-    }
-
-    public static function number(int $number, int $size = self::DEFAULT_LIMIT): self
-    {
-        return self::create($size, ($size * $number) - $size);
     }
 
     protected function invariantLimitValueMustBePositive(): bool
@@ -51,6 +41,21 @@ final class Page implements ValueObject
     protected function invariantOffsetValueMustBePositive(): bool
     {
         return $this->offset >= 0;
+    }
+
+    public static function create(int $limit, int $offset): self
+    {
+        return new self($limit, $offset);
+    }
+
+    public static function default(): self
+    {
+        return self::create(self::DEFAULT_LIMIT, self::DEFAULT_OFFSET);
+    }
+
+    public static function number(int $number, int $size = self::DEFAULT_LIMIT): self
+    {
+        return self::create($size, ($size * $number) - $size);
     }
 
     public function limit(): int
@@ -65,6 +70,6 @@ final class Page implements ValueObject
 
     public function __toString(): string
     {
-        return sprintf('%s.%s', $this->limit, $this->offset);
+        return sprintf('%s %s', $this->limit, $this->offset);
     }
 }

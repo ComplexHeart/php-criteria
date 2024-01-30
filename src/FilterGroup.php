@@ -45,10 +45,10 @@ final class FilterGroup extends TypedCollection
      * @param  array<int, array<int|string, mixed>>  $filters
      * @return FilterGroup
      */
-    public static function createFromArray(array $filters): self
+    public static function fromArray(array $filters): self
     {
         return self::create(
-            ...map(fn(array $filter): Filter => Filter::createFromArray($filter), $filters)
+            ...map(fn(array $filter): Filter => Filter::fromArray($filter), $filters)
         );
     }
 
@@ -56,8 +56,7 @@ final class FilterGroup extends TypedCollection
      * Add new filter to the FilterGroup.
      *
      * @param  Filter  $new
-     *
-     * @return self
+     * @return FilterGroup
      */
     public function addFilter(Filter $new): self
     {
@@ -72,84 +71,72 @@ final class FilterGroup extends TypedCollection
 
     public function addFilterEqual(string $field, mixed $value): self
     {
-        $this->addFilter(Filter::createEqual($field, $value));
-        return $this;
+        return $this->addFilter(Filter::equal($field, $value));
     }
 
     public function addFilterNotEqual(string $field, mixed $value): self
     {
-        $this->addFilter(Filter::createNotEqual($field, $value));
-        return $this;
+        return $this->addFilter(Filter::notEqual($field, $value));
     }
 
     public function addFilterGreaterThan(string $field, mixed $value): self
     {
-        $this->addFilter(Filter::createGreaterThan($field, $value));
-        return $this;
+        return $this->addFilter(Filter::greaterThan($field, $value));
     }
 
     public function addFilterGreaterOrEqualThan(string $field, mixed $value): self
     {
-        $this->addFilter(Filter::createGreaterOrEqualThan($field, $value));
-        return $this;
+        return $this->addFilter(Filter::greaterOrEqualThan($field, $value));
     }
 
     public function addFilterLessThan(string $field, mixed $value): self
     {
-        $this->addFilter(Filter::createLessThan($field, $value));
-        return $this;
+        return $this->addFilter(Filter::lessThan($field, $value));
     }
 
     public function addFilterLessOrEqualThan(string $field, mixed $value): self
     {
-        $this->addFilter(Filter::createLessOrEqualThan($field, $value));
-        return $this;
+        return $this->addFilter(Filter::lessOrEqualThan($field, $value));
     }
 
     /**
      * @param  string  $field
      * @param  array<scalar>  $value
-     * @return $this
+     * @return FilterGroup
      */
     public function addFilterIn(string $field, array $value): self
     {
-        $this->addFilter(Filter::createIn($field, $value));
-        return $this;
+        return $this->addFilter(Filter::in($field, $value));
     }
 
     /**
      * @param  string  $field
      * @param  array<scalar>  $value
-     * @return $this
+     * @return FilterGroup
      */
     public function addFilterNotIn(string $field, array $value): self
     {
-        $this->addFilter(Filter::createNotIn($field, $value));
-        return $this;
+        return $this->addFilter(Filter::notIn($field, $value));
     }
 
     public function addFilterLike(string $field, string $value): self
     {
-        $this->addFilter(Filter::createLike($field, $value));
-        return $this;
+        return $this->addFilter(Filter::like($field, $value));
     }
 
     public function addFilterNotLike(string $field, string $value): self
     {
-        $this->addFilter(Filter::createNotLike($field, $value));
-        return $this;
+        return $this->addFilter(Filter::notLike($field, $value));
     }
 
     public function addFilterContains(string $field, string $value): self
     {
-        $this->addFilter(Filter::createContains($field, $value));
-        return $this;
+        return $this->addFilter(Filter::contains($field, $value));
     }
 
     public function addFilterNotContains(string $field, string $value): self
     {
-        $this->addFilter(Filter::createNotContains($field, $value));
-        return $this;
+        return $this->addFilter(Filter::notContains($field, $value));
     }
 
     /**
