@@ -68,6 +68,15 @@ final class Criteria implements ValueObject
         return new self(groups: $groups, order: $order, page: $page);
     }
 
+    public static function default(): self
+    {
+        return self::create(
+            groups: [],
+            order: Order::none(),
+            page: Page::default()
+        );
+    }
+
     /**
      * Creates a new instance of Criteria from the given data source.
      *
@@ -76,19 +85,16 @@ final class Criteria implements ValueObject
      */
     public static function fromSource(CriteriaSource $source): self
     {
-        return Criteria::create(
+        return self::create(
             groups: map(
-                fn(array $g): FilterGroup => FilterGroup::createFromArray($g),
+                fn(array $g): FilterGroup => FilterGroup::fromArray($g),
                 $source->filterGroups()
             ),
             order: Order::create($source->orderBy(), OrderType::make($source->orderType())),
-            page: Page::create($source->pageLimit(), $source->pageOffset())
+            page: $source->pageNumber() > 0
+                ? Page::number($source->pageNumber(), $source->pageLimit())
+                : Page::create($source->pageLimit(), $source->pageOffset())
         );
-    }
-
-    public static function default(): self
-    {
-        return self::create(groups: [], order: Order::none(), page: Page::create());
     }
 
     /**
@@ -114,9 +120,7 @@ final class Criteria implements ValueObject
      */
     public function withFilterGroup(FilterGroup|Closure $group): self
     {
-        if (is_callable($group)) {
-            $group = $group(new FilterGroup());
-        }
+        $group = $group instanceof FilterGroup ? $group : $group(FilterGroup::create());
 
         // push single FilterGroup into an array.
         $group = is_array($group) ? $group : [$group];
@@ -157,15 +161,6 @@ final class Criteria implements ValueObject
         return self::create(groups: $this->groups, order: $this->order, page: $page);
     }
 
-    public function withPageOffset(int $offset): self
-    {
-        return self::create(
-            groups: $this->groups,
-            order: $this->order,
-            page: Page::create($this->pageLimit(), $offset)
-        );
-    }
-
     public function withPageLimit(int $limit): self
     {
         return self::create(
@@ -175,12 +170,21 @@ final class Criteria implements ValueObject
         );
     }
 
+    public function withPageOffset(int $offset): self
+    {
+        return self::create(
+            groups: $this->groups,
+            order: $this->order,
+            page: Page::create($this->pageLimit(), $offset)
+        );
+    }
+
     public function withPageNumber(int $number, int $size = null): self
     {
         return self::create(
             groups: $this->groups,
             order: $this->order,
-            page: Page::number($number, is_null($size) ? $this->page->limit() : $size)
+            page: Page::number($number, is_null($size) ? $this->pageLimit() : $size)
         );
     }
 
@@ -214,14 +218,14 @@ final class Criteria implements ValueObject
         return $this->page;
     }
 
-    public function pageOffset(): int
-    {
-        return $this->page->offset();
-    }
-
     public function pageLimit(): int
     {
         return $this->page->limit();
+    }
+
+    public function pageOffset(): int
+    {
+        return $this->page->offset();
     }
 
     public function __toString(): string

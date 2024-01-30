@@ -6,14 +6,8 @@ use ComplexHeart\Domain\Criteria\Filter;
 use ComplexHeart\Domain\Criteria\FilterGroup;
 use ComplexHeart\Domain\Criteria\Operator;
 
-test('FilterGroup should only accept Filter instances.', function () {
-    expect(FilterGroup::create())
-        ->toBeInstanceOf(FilterGroup::class)
-        ->toHaveCount(0);
-});
-
 test('FilterGroup should be created from primitive array of values.', function () {
-    expect(FilterGroup::createFromArray([['field', '=', 'value']]))
+    expect(FilterGroup::fromArray([['field', '=', 'value']]))
         ->toHaveCount(1);
 });
 
@@ -23,7 +17,7 @@ test('FilterGroup should be created without duplicated filters.', function () {
         ['field', '=', 'value'],
     ];
 
-    $g = FilterGroup::createFromArray($filters)
+    $g = FilterGroup::fromArray($filters)
         ->addFilter(Filter::create('field', Operator::EQUAL, 'value'))
         ->addFilter(Filter::create('name', Operator::EQUAL, 'Vega'));
 

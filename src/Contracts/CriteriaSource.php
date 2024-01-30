@@ -50,9 +50,16 @@ interface CriteriaSource
     public function pageLimit(): int;
 
     /**
-     * Provides the offset, by default should be 0.
+     * Provides the offset, by default should be 0. This value will be discarded
+     * if page number returns a value > 0.
      *
      * @return int
      */
     public function pageOffset(): int;
+
+    /**
+     * Provides the page number. If value > 0, will be used to compute the offset.
+     * @return int
+     */
+    public function pageNumber(): int;
 }

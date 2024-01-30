@@ -38,7 +38,6 @@ final class Filter implements ValueObject
      * @param  string  $field
      * @param  Operator  $operator
      * @param  mixed  $value
-     *
      * @return Filter
      */
     public static function create(string $field, Operator $operator, mixed $value): self
@@ -48,9 +47,9 @@ final class Filter implements ValueObject
 
     /**
      * @param  array<string, scalar>|array<string>  $filter
-     * @return self
+     * @return Filter
      */
-    public static function createFromArray(array $filter): self
+    public static function fromArray(array $filter): self
     {
         // check if the array is indexed or associative.
         $isIndexed = fn($source): bool => ([] !== $source) && array_keys($source) === range(0, count($source) - 1);
@@ -58,72 +57,72 @@ final class Filter implements ValueObject
         return ($isIndexed($filter))
             ? self::create(
                 "$filter[0]",
-                Operator::make("$filter[1]"),
+                Operator::create("$filter[1]"),
                 $filter[2]
             )
             : self::create(
                 "{$filter['field']}",
-                Operator::make("{$filter['operator']}"),
+                Operator::create("{$filter['operator']}"),
                 "{$filter['value']}"
             );
     }
 
-    public static function createEqual(string $field, mixed $value): self
+    public static function equal(string $field, mixed $value): self
     {
         return self::create($field, Operator::EQUAL, $value);
     }
 
-    public static function createNotEqual(string $field, mixed $value): self
+    public static function notEqual(string $field, mixed $value): self
     {
         return self::create($field, Operator::NOT_LIKE, $value);
     }
 
-    public static function createGreaterThan(string $field, mixed $value): self
+    public static function greaterThan(string $field, mixed $value): self
     {
         return self::create($field, Operator::GT, $value);
     }
 
-    public static function createGreaterOrEqualThan(string $field, mixed $value): self
+    public static function greaterOrEqualThan(string $field, mixed $value): self
     {
         return self::create($field, Operator::GTE, $value);
     }
 
-    public static function createLessThan(string $field, mixed $value): self
+    public static function lessThan(string $field, mixed $value): self
     {
         return self::create($field, Operator::LT, $value);
     }
 
-    public static function createLessOrEqualThan(string $field, mixed $value): self
+    public static function lessOrEqualThan(string $field, mixed $value): self
     {
         return self::create($field, Operator::LTE, $value);
     }
 
-    public static function createIn(string $field, mixed $value): self
+    public static function in(string $field, mixed $value): self
     {
         return self::create($field, Operator::IN, $value);
     }
 
-    public static function createNotIn(string $field, mixed $value): self
+    public static function notIn(string $field, mixed $value): self
     {
         return self::create($field, Operator::NOT_IN, $value);
     }
 
-    public static function createLike(string $field, mixed $value): self
+    public static function like(string $field, mixed $value): self
     {
         return self::create($field, Operator::LIKE, $value);
     }
 
-    public static function createNotLike(string $field, mixed $value): self
+    public static function notLike(string $field, mixed $value): self
     {
         return self::create($field, Operator::NOT_LIKE, $value);
     }
 
-    public static function createContains(string $field, mixed $value): self
+    public static function contains(string $field, mixed $value): self
     {
         return self::create($field, Operator::CONTAINS, $value);
     }
 
-    public static function createNotContains(string $field, mixed $value): self
+    public static function notContains(string $field, mixed $value): self
     {
         return self::create($field, Operator::NOT_CONTAINS, $value);
     }
@@ -165,7 +164,7 @@ final class Filter implements ValueObject
             $this->field(),
             $this->operator()->value,
             is_array($this->value())
-                ? implode('|', $this->value())
+                ? implode(',', $this->value())
                 : $this->value()
         );
     }

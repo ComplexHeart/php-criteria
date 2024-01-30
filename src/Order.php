@@ -35,17 +35,17 @@ final class Order implements ValueObject
         return preg_match('/\w*/', $this->by) === 1;
     }
 
-    public static function create(string $by, OrderType $type = OrderType::ASC): self
+    public static function create(string $by, OrderType $type): self
     {
         return new self($by, $type);
     }
 
-    public static function createAscBy(string $by): self
+    public static function asc(string $by): self
     {
-        return self::create($by);
+        return self::create($by, OrderType::ASC);
     }
 
-    public static function createDescBy(string $by): self
+    public static function desc(string $by): self
     {
         return self::create($by, OrderType::DESC);
     }
@@ -82,6 +82,6 @@ final class Order implements ValueObject
 
     public function __toString(): string
     {
-        return sprintf('%s.%s', $this->by(), $this->type()->value);
+        return sprintf('%s %s', $this->by(), $this->type()->value);
     }
 }

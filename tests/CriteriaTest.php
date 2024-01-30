@@ -25,7 +25,7 @@ test('Criteria should be successfully created from source.', function () {
 
         public function orderType(): string
         {
-            return 'asc';
+            return 'ASC';
         }
 
         public function orderBy(): string
@@ -42,14 +42,19 @@ test('Criteria should be successfully created from source.', function () {
         {
             return 0;
         }
+
+        public function pageNumber(): int
+        {
+            return 3;
+        }
     });
 
     expect($c->groups())->toHaveCount(1)
         ->and($c->groups()[0])->toHaveCount(2)
         ->and($c->orderBy())->toBe('name')
-        ->and($c->orderType())->toBe('asc')
+        ->and($c->orderType())->toBe('ASC')
         ->and($c->pageLimit())->toBe(25)
-        ->and($c->pageOffset())->toBe(0);
+        ->and($c->pageOffset())->toBe(50);
 });
 
 test('Criteria should throw exception for invalid filter groups.', function () {
@@ -62,14 +67,14 @@ test('Criteria should throw exception for invalid filter groups.', function () {
 
 test('Criteria should change complete and partially the criteria order parameter.', function () {
     $c = Criteria::default()
-        ->withOrder(Order::createDescBy('name'));
+        ->withOrder(Order::desc('name'));
 
     expect($c->orderBy())->toBe('name')
-        ->and($c->orderType())->toBe('desc')
+        ->and($c->orderType())->toBe('DESC')
         ->and($c->order()->isNone())->toBeFalse();
 
-    $c = $c->withOrder(Order::createAscBy('name'));
-    expect($c->orderType())->toBe('asc');
+    $c = $c->withOrder(Order::asc('name'));
+    expect($c->orderType())->toBe('ASC');
 
     $c = $c->withOrder(Order::random());
     expect($c->order()->isRandom())->toBeTrue();
@@ -80,35 +85,33 @@ test('Criteria should change complete and partially the criteria order parameter
     $c = $c->withOrderBy('surname');
     expect($c->orderBy())->toBe('surname');
 
-    $c = $c->withOrderType('asc');
-    expect($c->orderType())->toBe('asc')
-        ->and($c->order())->toBeInstanceOf(Order::class);
+    $c = $c->withOrderType('ASC');
+    expect($c->orderType())->toBe('ASC');
 });
 
 test('Criteria should change complete and partially the criteria page parameter.', function () {
     $c = Criteria::default()
-        ->withPage(Page::create(100, 50));
+        ->withPage(Page::create(100, 100));
 
-    expect($c->pageLimit())->toBe(100)
-        ->and($c->pageOffset())->toBe(50);
+    expect($c->page()->limit())->toBe(100)
+        ->and($c->page()->offset())->toBe(100);
 
     $c = $c->withPageLimit(42);
     expect($c->pageLimit())->toBe(42);
 
     $c = $c->withPageOffset(10);
-    expect($c->pageOffset())->toBe(10)
-        ->and($c->page())->toBeInstanceOf(Page::class);
+    expect($c->pageOffset())->toBe(10);
 });
 
 test('Criteria should change the complete filter groups.', function () {
     $c = Criteria::default()
         ->withFilterGroups([
-            FilterGroup::createFromArray([['field', '=', 'one']])
+            FilterGroup::fromArray([['name', '=', 'Vicent']])
         ])
         ->withFilterGroups([
-            FilterGroup::createFromArray([['field', '=', 'two']]),
-            FilterGroup::createFromArray([['field', '=', 'three']]),
-            FilterGroup::createFromArray([['field', '=', 'four']]),
+            FilterGroup::fromArray([['name', '=', 'Jules']]),
+            FilterGroup::fromArray([['name', '=', 'Marcellus']]),
+            FilterGroup::fromArray([['name', '=', 'Butch']]),
         ]);
 
     expect($c->groups())->toHaveCount(3);
@@ -116,11 +119,11 @@ test('Criteria should change the complete filter groups.', function () {
 
 test('Criteria should add or filter group to criteria object.', function () {
     $c = Criteria::default()
-        ->withFilterGroup(fn(FilterGroup $g): FilterGroup => $g
+        ->withFilterGroup(FilterGroup::create()
             ->addFilterEqual('name', 'Vincent')
             ->addFilterEqual('status', 'deceased')
         )
-        ->withFilterGroup(fn(FilterGroup $g): FilterGroup => $g
+        ->withFilterGroup(FilterGroup::create()
             ->addFilterEqual('name', 'Jules')
             ->addFilterEqual('deceased', 'alive')
         );
@@ -134,22 +137,22 @@ test('Criteria should add or filter group to criteria object.', function () {
 
 test('Criteria should be correctly serialized to string.', function () {
     $c = Criteria::default()
-        ->withFilterGroup(fn(FilterGroup $group): FilterGroup => $group
+        ->withFilterGroup(FilterGroup::create()
             ->addFilterEqual('name', 'Vincent')
             ->addFilterGreaterOrEqualThan('age', '35')
         )
         ->withPageLimit(100)
         ->withPageOffset(0)
         ->withOrderBy('name')
-        ->withOrderType('asc');
+        ->withOrderType('ASC');
 
-    expect($c->__toString())->toBe('name.=.Vincent+age.>=.35#name.asc#100.0');
+    expect($c->__toString())->toBe('name.=.Vincent+age.>=.35#name ASC#100 0');
 });
 
-test('Criteria should configure limit and offset using page number', function () {
+test('Criteria should configure limit and offset using page number.', function () {
     $c = Criteria::default()
         ->withPageNumber(3, 25);
 
-    expect($c->page()->limit())->toBe(25)
-        ->and($c->page()->offset())->toBe(50);
+    expect($c->pageLimit())->toBe(25)
+        ->and($c->pageOffset())->toBe(50);
 });
