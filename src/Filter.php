@@ -74,7 +74,7 @@ final class Filter implements ValueObject
 
     public static function notEqual(string $field, mixed $value): self
     {
-        return self::create($field, Operator::NOT_LIKE, $value);
+        return self::create($field, Operator::NOT_EQUAL, $value);
     }
 
     public static function greaterThan(string $field, mixed $value): self

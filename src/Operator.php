@@ -18,12 +18,12 @@ enum Operator: string
     case GTE = '>=';
     case LT = '<';
     case LTE = '<=';
-    case IN = 'IN';
-    case NOT_IN = 'NOT IN';
-    case LIKE = 'LIKE';
-    case NOT_LIKE = 'NOT LIKE';
-    case CONTAINS = 'CONTAINS';
-    case NOT_CONTAINS = 'NOT CONTAINS';
+    case IN = 'in';
+    case NOT_IN = 'not in';
+    case LIKE = 'like';
+    case NOT_LIKE = 'not like';
+    case CONTAINS = 'contains';
+    case NOT_CONTAINS = 'not contains';
 
     public static function create(string $value): self
     {
