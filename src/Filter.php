@@ -63,7 +63,7 @@ final class Filter implements ValueObject
             : self::create(
                 "{$filter['field']}",
                 Operator::create("{$filter['operator']}"),
-                "{$filter['value']}"
+                $filter['value']
             );
     }
 
