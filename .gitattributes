@@ -3,4 +3,7 @@
 /phpunit.xml                export-ignore
 /tests                      export-ignore
 /README.md                  export-ignore
-sonar-project.properties    export-ignore
+/sonar-project.properties   export-ignore
+/phpstan.neon               export-ignore
+test.xml                    export-ignore
+/wiki                       export-ignore

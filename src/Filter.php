@@ -22,12 +22,12 @@ final class Filter implements ValueObject
      *
      * @param  string  $field
      * @param  Operator  $operator
-     * @param  mixed  $value
+     * @param  scalar|null|array<scalar>  $value
      */
     public function __construct(
         private readonly string $field,
         private readonly Operator $operator,
-        private readonly mixed $value,
+        private readonly bool|float|int|string|null|array $value,
     ) {
         $this->check();
     }
@@ -37,10 +37,10 @@ final class Filter implements ValueObject
      *
      * @param  string  $field
      * @param  Operator  $operator
-     * @param  mixed  $value
+     * @param  scalar|null|array<scalar>  $value
      * @return Filter
      */
-    public static function create(string $field, Operator $operator, mixed $value): self
+    public static function create(string $field, Operator $operator, bool|float|int|string|null|array $value): self
     {
         return new self($field, $operator, $value);
     }
@@ -67,62 +67,122 @@ final class Filter implements ValueObject
             );
     }
 
-    public static function equal(string $field, mixed $value): self
+    /**
+     * @param  string  $field
+     * @param  bool|float|int|string|null  $value
+     * @return self
+     */
+    public static function equal(string $field, bool|float|int|string|null $value): self
     {
         return self::create($field, Operator::EQUAL, $value);
     }
 
-    public static function notEqual(string $field, mixed $value): self
+    /**
+     * @param  string  $field
+     * @param  bool|float|int|string|null  $value
+     * @return self
+     */
+    public static function notEqual(string $field, bool|float|int|string|null $value): self
     {
         return self::create($field, Operator::NOT_EQUAL, $value);
     }
 
-    public static function greaterThan(string $field, mixed $value): self
+    /**
+     * @param  string  $field
+     * @param  bool|float|int|string|null  $value
+     * @return self
+     */
+    public static function greaterThan(string $field, bool|float|int|string|null $value): self
     {
         return self::create($field, Operator::GT, $value);
     }
 
-    public static function greaterOrEqualThan(string $field, mixed $value): self
+    /**
+     * @param  string  $field
+     * @param  bool|float|int|string|null  $value
+     * @return self
+     */
+    public static function greaterOrEqualThan(string $field, bool|float|int|string|null $value): self
     {
         return self::create($field, Operator::GTE, $value);
     }
 
-    public static function lessThan(string $field, mixed $value): self
+    /**
+     * @param  string  $field
+     * @param  bool|float|int|string|null  $value
+     * @return self
+     */
+    public static function lessThan(string $field, bool|float|int|string|null $value): self
     {
         return self::create($field, Operator::LT, $value);
     }
 
-    public static function lessOrEqualThan(string $field, mixed $value): self
+    /**
+     * @param  string  $field
+     * @param  bool|float|int|string|null  $value
+     * @return self
+     */
+    public static function lessOrEqualThan(string $field, bool|float|int|string|null $value): self
     {
         return self::create($field, Operator::LTE, $value);
     }
 
-    public static function in(string $field, mixed $value): self
+    /**
+     * @param  string  $field
+     * @param  array<scalar>  $value
+     * @return self
+     */
+    public static function in(string $field, array $value): self
     {
         return self::create($field, Operator::IN, $value);
     }
 
-    public static function notIn(string $field, mixed $value): self
+    /**
+     * @param  string  $field
+     * @param  array<scalar>  $value
+     * @return self
+     */
+    public static function notIn(string $field, array $value): self
     {
         return self::create($field, Operator::NOT_IN, $value);
     }
 
-    public static function like(string $field, mixed $value): self
+    /**
+     * @param  string  $field
+     * @param  bool|float|int|string|null  $value
+     * @return self
+     */
+    public static function like(string $field, bool|float|int|string|null $value): self
     {
         return self::create($field, Operator::LIKE, $value);
     }
 
-    public static function notLike(string $field, mixed $value): self
+    /**
+     * @param  string  $field
+     * @param  bool|float|int|string|null  $value
+     * @return self
+     */
+    public static function notLike(string $field, bool|float|int|string|null $value): self
     {
         return self::create($field, Operator::NOT_LIKE, $value);
     }
 
-    public static function contains(string $field, mixed $value): self
+    /**
+     * @param  string  $field
+     * @param  bool|float|int|string|null  $value
+     * @return self
+     */
+    public static function contains(string $field, bool|float|int|string|null $value): self
     {
         return self::create($field, Operator::CONTAINS, $value);
     }
 
-    public static function notContains(string $field, mixed $value): self
+    /**
+     * @param  string  $field
+     * @param  bool|float|int|string|null  $value
+     * @return self
+     */
+    public static function notContains(string $field, bool|float|int|string|null $value): self
     {
         return self::create($field, Operator::NOT_CONTAINS, $value);
     }
@@ -150,9 +210,9 @@ final class Filter implements ValueObject
     /**
      * Return the field value.
      *
-     * @return mixed
+     * @return scalar|null|array<scalar>
      */
-    public function value(): mixed
+    public function value(): bool|float|int|string|null|array
     {
         return $this->value;
     }
