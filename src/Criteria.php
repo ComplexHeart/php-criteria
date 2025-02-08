@@ -179,7 +179,7 @@ final class Criteria implements ValueObject
         );
     }
 
-    public function withPageNumber(int $number, int $size = null): self
+    public function withPageNumber(int $number, ?int $size = null): self
     {
         return self::create(
             groups: $this->groups,

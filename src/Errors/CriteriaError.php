@@ -28,8 +28,12 @@ class CriteriaError extends Error
      * @param  Throwable|null  $previous
      * @param  array<string>  $violations
      */
-    public function __construct(string $message = "", int $code = 0, Throwable $previous = null, array $violations = [])
-    {
+    public function __construct(
+        string $message = "",
+        int $code = 0,
+        ?Throwable $previous = null,
+        array $violations = []
+    ) {
         parent::__construct($message, $code, $previous);
 
         $this->violations = $violations;
@@ -42,7 +46,7 @@ class CriteriaError extends Error
      * @param  Throwable|null  $previous
      * @return self
      */
-    public static function create(string $message, array $violations, int $code = 0, Throwable $previous = null): self
+    public static function create(string $message, array $violations, int $code = 0, ?Throwable $previous = null): self
     {
         return new self($message, $code, $previous, $violations);
     }

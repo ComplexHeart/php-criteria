@@ -69,31 +69,61 @@ final class FilterGroup extends TypedCollection
         return $this;
     }
 
+    /**
+     * @param  string  $field
+     * @param  bool|float|int|string|null  $value
+     * @return self
+     */
     public function addFilterEqual(string $field, mixed $value): self
     {
         return $this->addFilter(Filter::equal($field, $value));
     }
 
+    /**
+     * @param  string  $field
+     * @param  bool|float|int|string|null  $value
+     * @return self
+     */
     public function addFilterNotEqual(string $field, mixed $value): self
     {
         return $this->addFilter(Filter::notEqual($field, $value));
     }
 
+    /**
+     * @param  string  $field
+     * @param  bool|float|int|string|null  $value
+     * @return self
+     */
     public function addFilterGreaterThan(string $field, mixed $value): self
     {
         return $this->addFilter(Filter::greaterThan($field, $value));
     }
 
+    /**
+     * @param  string  $field
+     * @param  bool|float|int|string|null  $value
+     * @return self
+     */
     public function addFilterGreaterOrEqualThan(string $field, mixed $value): self
     {
         return $this->addFilter(Filter::greaterOrEqualThan($field, $value));
     }
 
+    /**
+     * @param  string  $field
+     * @param  bool|float|int|string|null  $value
+     * @return self
+     */
     public function addFilterLessThan(string $field, mixed $value): self
     {
         return $this->addFilter(Filter::lessThan($field, $value));
     }
 
+    /**
+     * @param  string  $field
+     * @param  bool|float|int|string|null  $value
+     * @return self
+     */
     public function addFilterLessOrEqualThan(string $field, mixed $value): self
     {
         return $this->addFilter(Filter::lessOrEqualThan($field, $value));
@@ -119,21 +149,41 @@ final class FilterGroup extends TypedCollection
         return $this->addFilter(Filter::notIn($field, $value));
     }
 
+    /**
+     * @param  string  $field
+     * @param  string  $value
+     * @return self
+     */
     public function addFilterLike(string $field, string $value): self
     {
         return $this->addFilter(Filter::like($field, $value));
     }
 
+    /**
+     * @param  string  $field
+     * @param  string  $value
+     * @return self
+     */
     public function addFilterNotLike(string $field, string $value): self
     {
         return $this->addFilter(Filter::notLike($field, $value));
     }
 
+    /**
+     * @param  string  $field
+     * @param  string  $value
+     * @return self
+     */
     public function addFilterContains(string $field, string $value): self
     {
         return $this->addFilter(Filter::contains($field, $value));
     }
 
+    /**
+     * @param  string  $field
+     * @param  string  $value
+     * @return self
+     */
     public function addFilterNotContains(string $field, string $value): self
     {
         return $this->addFilter(Filter::notContains($field, $value));
