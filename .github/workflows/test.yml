@@ -8,6 +8,7 @@ on:
 
 jobs:
   test:
+    name: Test on PHP ${{ matrix.php-version }}
     runs-on: ubuntu-latest
 
     strategy:
@@ -37,7 +38,7 @@ jobs:
       - name: Validate composer.json and composer.lock
         run: composer validate
 
-      - name: Install dependencies
+      - name: Install Dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'
         run: composer install --prefer-dist --no-progress --no-suggest
 

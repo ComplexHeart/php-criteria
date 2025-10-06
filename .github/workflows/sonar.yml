@@ -17,18 +17,28 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up PHP
+      - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
           coverage: xdebug
           tools: composer:v2
 
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
+      - name: Cache dependencies
+        uses: actions/cache@v4.3.0
+        with:
+          path: ~/.composer/cache
+          key: php-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: php-${{ matrix.php-version }}-composer-
 
-      - name: Run PHPUnit with coverage
-        run: ./vendor/bin/phpunit --coverage-clover=coverage.xml --log-junit=test.xml
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Install Dependencies
+        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: Execute Unit, Integration and Acceptance Tests
+        run: composer test
 
       - name: Fix paths in coverage reports for Sonar
         run: |
