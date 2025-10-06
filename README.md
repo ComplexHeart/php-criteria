@@ -67,5 +67,3 @@ $criteria = Criteria::default()
     ->withOrderType(Order::TYPE_ASC)
     ->withPageNumber(3);
 ```
-
-
