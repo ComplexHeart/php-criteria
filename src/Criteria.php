@@ -87,7 +87,7 @@ final class Criteria implements ValueObject
     {
         return self::create(
             groups: map(
-                fn(array $g): FilterGroup => FilterGroup::fromArray($g),
+                fn (array $g): FilterGroup => FilterGroup::fromArray($g),
                 $source->filterGroups()
             ),
             order: Order::create($source->orderBy(), OrderType::make($source->orderType())),
@@ -230,7 +230,7 @@ final class Criteria implements ValueObject
 
     public function __toString(): string
     {
-        $groups = join('||', map(fn(FilterGroup $group): string => $group->__toString(), $this->groups));
+        $groups = join('||', map(fn (FilterGroup $group): string => $group->__toString(), $this->groups));
         $order = $this->order->__toString();
         $page = $this->page->__toString();
 

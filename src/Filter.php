@@ -52,7 +52,7 @@ final class Filter implements ValueObject
     public static function fromArray(array $filter): self
     {
         // check if the array is indexed or associative.
-        $isIndexed = fn($source): bool => ([] !== $source) && array_keys($source) === range(0, count($source) - 1);
+        $isIndexed = fn ($source): bool => ([] !== $source) && array_keys($source) === range(0, count($source) - 1);
 
         return ($isIndexed($filter))
             ? self::create(
