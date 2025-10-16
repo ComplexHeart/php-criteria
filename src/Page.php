@@ -17,8 +17,8 @@ final class Page implements ValueObject
 {
     use IsValueObject;
 
-    const DEFAULT_LIMIT = 25;
-    const DEFAULT_OFFSET = 0;
+    public const DEFAULT_LIMIT = 25;
+    public const DEFAULT_OFFSET = 0;
 
     /**
      * Page constructor.

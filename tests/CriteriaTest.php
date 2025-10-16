@@ -12,7 +12,7 @@ use ComplexHeart\Domain\Criteria\Order;
 use ComplexHeart\Domain\Criteria\Page;
 
 test('Criteria should be successfully created from source.', function () {
-    $c = Criteria::fromSource(new class implements CriteriaSource {
+    $c = Criteria::fromSource(new class () implements CriteriaSource {
         public function filterGroups(): array
         {
             return [
@@ -59,7 +59,7 @@ test('Criteria should be successfully created from source.', function () {
 
 test('Criteria should throw exception for invalid filter groups.', function () {
     try {
-        Criteria::default()->withFilterGroup(fn() => [1, 2, 3]);
+        Criteria::default()->withFilterGroup(fn () => [1, 2, 3]);
     } catch (CriteriaError $e) {
         expect($e->violations())->toHaveCount(1);
     }
@@ -119,11 +119,13 @@ test('Criteria should change the complete filter groups.', function () {
 
 test('Criteria should add or filter group to criteria object.', function () {
     $c = Criteria::default()
-        ->withFilterGroup(FilterGroup::create()
+        ->withFilterGroup(
+            FilterGroup::create()
             ->addFilterEqual('name', 'Vincent')
             ->addFilterEqual('status', 'deceased')
         )
-        ->withFilterGroup(FilterGroup::create()
+        ->withFilterGroup(
+            FilterGroup::create()
             ->addFilterEqual('name', 'Jules')
             ->addFilterEqual('deceased', 'alive')
         );
@@ -137,7 +139,8 @@ test('Criteria should add or filter group to criteria object.', function () {
 
 test('Criteria should be correctly serialized to string.', function () {
     $c = Criteria::default()
-        ->withFilterGroup(FilterGroup::create()
+        ->withFilterGroup(
+            FilterGroup::create()
             ->addFilterEqual('name', 'Vincent')
             ->addFilterGreaterOrEqualThan('age', '35')
         )

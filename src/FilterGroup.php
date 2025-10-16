@@ -48,7 +48,7 @@ final class FilterGroup extends TypedCollection
     public static function fromArray(array $filters): self
     {
         return self::create(
-            ...map(fn(array $filter): Filter => Filter::fromArray($filter), $filters)
+            ...map(fn (array $filter): Filter => Filter::fromArray($filter), $filters)
         );
     }
 
@@ -60,7 +60,7 @@ final class FilterGroup extends TypedCollection
      */
     public function addFilter(Filter $new): self
     {
-        if ($this->filter(fn(Filter $filter): bool => $filter->equals($new))->count() > 0) {
+        if ($this->filter(fn (Filter $filter): bool => $filter->equals($new))->count() > 0) {
             return $this;
         }
 
@@ -196,6 +196,6 @@ final class FilterGroup extends TypedCollection
      */
     public function __toString(): string
     {
-        return join('+', map(fn(Filter $filter): string => $filter->__toString(), $this));
+        return join('+', map(fn (Filter $filter): string => $filter->__toString(), $this));
     }
 }
