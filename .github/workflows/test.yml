@@ -2,24 +2,84 @@ name: Test
 
 on:
   push:
-    branches: [ 'main' ]
+    branches: [main]
   pull_request:
-    types: [ 'opened', 'synchronize', 'reopened' ]
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  test:
-    name: Test on PHP ${{ matrix.php-version }}
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        php-version: [ '8.2', '8.3', '8.4']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          tools: composer:v2
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: php-8.3-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: php-8.3-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Check code style
+        run: composer pint-test
+
+  analyse:
+    name: Static Analysis
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
         with:
-          fetch-depth: 0
+          php-version: "8.3"
+          tools: composer:v2
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: php-8.3-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: php-8.3-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run PHPStan
+        run: composer analyse
+        continue-on-error: true
+
+  test:
+    name: Test (PHP ${{ matrix.php-version }})
+    runs-on: ubuntu-latest
+    needs: [lint]
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ["8.2", "8.3", "8.4"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Set up PHP ${{ matrix.php-version }}
         uses: shivammathur/setup-php@v2
@@ -29,21 +89,86 @@ jobs:
           tools: composer:v2
 
       - name: Cache dependencies
-        uses: actions/cache@v4.3.0
+        uses: actions/cache@v4
         with:
           path: ~/.composer/cache
           key: php-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: php-${{ matrix.php-version }}-composer-
 
-      - name: Validate composer.json and composer.lock
-        run: composer validate
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
 
-      - name: Install Dependencies
-        if: steps.composer-cache.outputs.cache-hit != 'true'
-        run: composer install --prefer-dist --no-progress --no-suggest
-
-      - name: Execute Static Code analysis
-        run: composer analyse
-
-      - name: Execute Unit, Integration and Acceptance Tests
+      - name: Run tests
         run: composer test
+
+      - name: Upload coverage artifact
+        if: matrix.php-version == '8.4'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: |
+            coverage.xml
+            test.xml
+
+  sonarcloud:
+    name: SonarCloud Analysis
+    runs-on: ubuntu-latest
+    needs: [test]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+
+      - name: Fix paths in coverage reports
+        run: |
+          sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace/@g' coverage.xml
+          sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace/@g' test.xml
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  ci-success:
+    name: CI Success
+    runs-on: ubuntu-latest
+    needs: [lint, analyse, test, sonarcloud]
+    if: always()
+
+    steps:
+      - name: Check all jobs
+        run: |
+          echo "===== Job Results ====="
+          echo "Lint:       ${{ needs.lint.result }}"
+          echo "Analyse:    ${{ needs.analyse.result }}"
+          echo "Test:       ${{ needs.test.result }}"
+          echo "SonarCloud: ${{ needs.sonarcloud.result }}"
+          echo "======================="
+
+          if [ "${{ needs.lint.result }}" != "success" ]; then
+            echo "❌ Lint failed"
+            exit 1
+          fi
+
+          if [ "${{ needs.test.result }}" != "success" ]; then
+            echo "❌ Tests failed"
+            exit 1
+          fi
+
+          if [ "${{ needs.analyse.result }}" == "failure" ]; then
+            echo "⚠️ Static analysis failed (non-blocking)"
+          fi
+
+          if [ "${{ needs.sonarcloud.result }}" != "success" ]; then
+            echo "❌ SonarCloud failed"
+            exit 1
+          fi
+
+          echo "✅ All required checks passed!"

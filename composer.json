@@ -2,7 +2,7 @@
   "name": "complex-heart/criteria",
   "description": "Small implementation of a filter criteria pattern in PHP for Complex Heart SDK. Compose several filters using fluent interface.",
   "type": "library",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "authors": [
     {
       "name": "Unay Santisteban",
